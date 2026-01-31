@@ -5479,12 +5479,12 @@ static const struct panel_desc_dsi panel_ams667uu01 = {
 	.lanes = 4,
 };
 
-static const struct of_device_id panel_dsi_of_match[] = {
-    {
-        .compatible = "xiaomi,lmi-ams667uu01",
-        .data = &panel_ams667uu01,
-    },
-};
+// static const struct of_device_id panel_dsi_of_match[] = {
+//     {
+//         .compatible = "xiaomi,lmi-ams667uu01",
+//         .data = &panel_ams667uu01,
+//     },
+// };
 module_exit(panel_simple_exit);
 
 MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
