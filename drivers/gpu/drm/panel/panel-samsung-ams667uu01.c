@@ -103,6 +103,10 @@ static int ams667uu01_prepare(struct drm_panel *panel)
 		return ret;
 	}
 
+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
+	mipi_dsi_msleep(&dsi_ctx, 120);
+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
+	
 	return 0;
 }
 
