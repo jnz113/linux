@@ -91,6 +91,7 @@ static int ams667uu01_off(struct ams667uu01 *ctx)
 static int ams667uu01_prepare(struct drm_panel *panel)
 {
 	struct ams667uu01 *ctx = to_ams667uu01(panel);
+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
 	struct device *dev = &ctx->dsi->dev;
 	int ret;
 
