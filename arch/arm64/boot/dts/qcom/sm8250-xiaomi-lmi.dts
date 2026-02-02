@@ -759,9 +759,9 @@
 &i2c16 {
 	clock-frequency = <400000>;
 	status = "okay";
-	bq2597x-standalone@66 {
+	bq2597x-standalone@64 {
 		compatible = "ti,bq2597x-slave";
-		reg = <0x66>;
+		reg = <0x64>;
 		interrupt-parent = <&tlmm>;
 		interrupts = <157 0x2002>;
 		pinctrl-names = "default";
@@ -1141,7 +1141,7 @@
 	// dr_mode = "peripheral";
 	usb-role-switch;
 
-	phys = <&usb_1_hsphy>, <&usb_1_qmpphy>;
+	phys = <&usb_1_hsphy>, <&usb_1_qmpphy QMP_USB43DP_USB3_PHY>;
 	phy-names = "usb2-phy", "usb3-phy";
 };
 
