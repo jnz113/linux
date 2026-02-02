@@ -1,0 +1,74 @@
+name: ARM64 Kernel Build (nikroks/alioth)
+
+on:
+  push:
+    branches:
+      - nikroks/alioth
+  pull_request:
+    branches:
+      - nikroks/alioth
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          bc \
+          bison \
+          flex \
+          libssl-dev \
+          libncurses-dev \
+          dwarves \
+          gcc-aarch64-linux-gnu \
+          gcc-arm-linux-gnueabi \
+          device-tree-compiler
+
+    - name: Set environment
+      run: |
+        echo "ARCH=arm64" >> $GITHUB_ENV
+        echo "CROSS_COMPILE=aarch64-linux-gnu-" >> $GITHUB_ENV
+
+    - name: Build kernel Image
+      run: |
+        mkdir -p build_logs
+        echo "=== Building defconfig ===" | tee build_logs/defconfig.log
+        make O=out ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- defconfig 2>&1 | tee -a build_logs/defconfig.log
+
+        echo "=== Building Image ===" | tee build_logs/build_image.log
+        make -j$(nproc) O=out ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image 2>&1 | tee -a build_logs/build_image.log
+
+    - name: Build DTB / DTBO
+      run: |
+        echo "=== Building DTBs ===" | tee build_logs/build_dtb.log
+        make -j$(nproc) O=out ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- dtbs 2>&1 | tee -a build_logs/build_dtb.log
+
+    - name: Validate DTS compilation
+      run: |
+        echo "=== Validating DTS ===" | tee build_logs/dts_check.log
+        find arch/arm64/boot/dts -name "*.dts" | while read f; do
+          echo "Compiling $f" | tee -a build_logs/dts_check.log
+          dtc -I dts -O dtb "$f" -o /tmp/test.dtb 2>&1 | tee -a build_logs/dts_check.log
+        done
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: kernel-output
+        path: |
+          out/arch/arm64/boot/Image
+          out/arch/arm64/boot/dts/**/*.dtb
+
+    - name: Upload build logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-logs
+        path: build_logs/
