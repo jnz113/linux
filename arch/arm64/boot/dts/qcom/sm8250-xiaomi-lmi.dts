@@ -1140,6 +1140,9 @@
 	dr_mode = "otg";
 	// dr_mode = "peripheral";
 	usb-role-switch;
+
+	phys = <&usb_1_hsphy>, <&usb_1_qmpphy>;
+	phy-names = "usb2-phy", "usb3-phy";
 };
 
 &usb_1_dwc3_hs_out {
