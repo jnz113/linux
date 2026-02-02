@@ -760,7 +760,7 @@
 	clock-frequency = <400000>;
 	status = "okay";
 	bq2597x-standalone@64 {
-		compatible = "ti,bq2597x-slave";
+		compatible = "ti,bq2597x-standalone";
 		reg = <0x64>;
 		interrupt-parent = <&tlmm>;
 		interrupts = <157 0x2002>;
